@@ -51,6 +51,11 @@ func TestPythonExtWorkspace(t *testing.T) {
 				api.Done(t)
 			})
 
+			userId, err := api.CreateUser(username, userToken)
+			if err != nil {
+				t.Fatal(err)
+			}
+
 			nfo, stopWs, err := integration.LaunchWorkspaceFromContextURL(ctx, "github.com/jeanp413/python-test-workspace", username, api)
 			if err != nil {
 				t.Fatal(err)
@@ -66,10 +71,7 @@ func TestPythonExtWorkspace(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			userId, err := api.GetUserId(username)
-			if err != nil {
-				t.Fatal(err)
-			}
+
 			hash := sha256.Sum256([]byte(userId + serverConfig.Session.Secret))
 			secretKey, err := api.CreateGitpodOneTimeSecret(fmt.Sprintf("%x", hash))
 			if err != nil {

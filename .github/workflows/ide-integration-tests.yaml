@@ -1,0 +1,58 @@
+name: IDE integration tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'jp/run-integration-test'
+    # paths:
+    #   - '**.js'
+  # workflow_run:
+  #   workflows: ["Code Nightly"]
+  #   types: [completed]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install werft
+        run: |
+          set -e
+          cd /usr/bin
+          sudo curl -fsSL -O https://github.com/csweichel/werft/releases/download/v0.1.5/werft-client-linux-amd64.tar.gz
+          sudo tar xf werft-client-linux-amd64.tar.gz
+          sudo mv werft-client-linux-amd64 werft
+      - name: Auth Google Cloud SDK
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+      - run: |
+          set -e
+
+          gcloud auth configure-docker --quiet
+
+          export WERFT_K8S_NAMESPACE=werft
+          export WERFT_DIAL_MODE=kubernetes
+
+          # this is because we don't want to increate gitpod-build-main number, we can choose a name
+          cp .werft/build.yaml .werft/test.yaml
+          # version is actual namespace that werft is build, --job-file should be same with above
+          werft run --kubeconfig=dev/image/kubeconfig.yaml github -a version=staging-test-1 --job-file .werft/test.yaml github.com/gitpod-io/gitpod:main
+          # run test
+          # werft run --kubeconfig=dev/image/kubeconfig.yaml github -j .werft/run-integration-tests.yaml -a testPattern=ide.test -a namespace=staging-test-1 -a version=gitpod-test-main.1 -a username=test_user -a userToken=${{ secrets.GITHUB_TOKEN }} -f
+          # final we remove the temp preview environment
+          sleep 60s
+          werft run --kubeconfig=dev/image/kubeconfig.yaml github -a namespace=staging-test-1 --remote-job-path .werft/wipe-devstaging.yaml github.com/gitpod-io/gitpod:main
+
+      # - name: Slack Notification
+      #   if: always()
+      #   uses: rtCamp/action-slack-notify@v2
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.IDE_SLACK_WEBHOOK }}
+      #     SLACK_COLOR: ${{ job.status }}
