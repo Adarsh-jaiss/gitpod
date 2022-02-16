@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="UnattendedHostPersistenceState">
+    <option name="openedFilesInfos">
+      <list>
+        <OpenedFileInfo>
+          <option name="caretOffset" value="512" />
+          <option name="fileUrl" value="file://$PROJECT_DIR$/dev/jetbrains-test/BUILD.yaml" />
+        </OpenedFileInfo>
+        <OpenedFileInfo>
+          <option name="caretOffset" value="1990" />
+          <option name="fileUrl" value="file://$PROJECT_DIR$/.github/workflows/jetbrains-auto-update.yml" />
+        </OpenedFileInfo>
+      </list>
+    </option>
+  </component>
 </project>
