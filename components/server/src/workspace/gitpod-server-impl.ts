@@ -57,7 +57,7 @@ import { PartialProject } from '@gitpod/gitpod-protocol/src/teams-projects-proto
 import { ClientMetadata, traceClientMetadata } from '../websocket/websocket-connection-manager';
 import { ConfigurationService } from '../config/configuration-service';
 import { ProjectEnvVar } from '@gitpod/gitpod-protocol/src/protocol';
-import { InstallationAdminSettings, Data } from '@gitpod/gitpod-protocol';
+import { InstallationAdminSettings, TelemetryData } from '@gitpod/gitpod-protocol';
 import { Deferred } from '@gitpod/gitpod-protocol/lib/util/deferred';
 import { InstallationAdminTelemetryDataProvider } from '../installation-admin/telemetry-data-provider';
 
@@ -2206,7 +2206,7 @@ export class GitpodServerImpl implements GitpodServerWithTracing, Disposable {
         await this.installationAdminDb.setSettings(newSettings);
     }
 
-    async adminGetTelemetryData(ctx: TraceContext): Promise<Data> {
+    async adminGetTelemetryData(ctx: TraceContext): Promise<TelemetryData> {
         traceAPIParams(ctx, {});
 
         await this.guardAdminAccess("adminGetTelemetryData", {}, Permission.ADMIN_API);
