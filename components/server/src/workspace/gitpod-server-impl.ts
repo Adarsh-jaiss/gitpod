@@ -2209,6 +2209,8 @@ export class GitpodServerImpl implements GitpodServerWithTracing, Disposable {
     async adminGetTelemetryData(ctx: TraceContext): Promise<Data> {
         traceAPIParams(ctx, {});
 
+        await this.guardAdminAccess("adminGetTelemetryData", {}, Permission.ADMIN_API);
+
        return await this.telemetryDataProvider.getTelemetryData();
     }
 
