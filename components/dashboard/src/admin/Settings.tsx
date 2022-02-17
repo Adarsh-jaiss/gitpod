@@ -5,7 +5,7 @@
  */
 
 import { useContext } from "react";
-import { Data, InstallationAdminSettings } from "@gitpod/gitpod-protocol";
+import { TelemetryData, InstallationAdminSettings } from "@gitpod/gitpod-protocol";
 import { AdminContext } from "../admin-context";
 import CheckBox from "../components/CheckBox";
 import { PageWithSubMenu } from "../components/PageWithSubMenu";
@@ -16,7 +16,7 @@ import InfoBox from "../components/InfoBox";
 
 export default function Settings() {
     const { adminSettings, setAdminSettings } = useContext(AdminContext);
-    const [telemetryData, setTelemetryData] = useState<Data>();
+    const [telemetryData, setTelemetryData] = useState<TelemetryData>();
 
 
     const actuallySetTelemetryPrefs = async (value: InstallationAdminSettings) => {
@@ -42,7 +42,7 @@ export default function Settings() {
                     onChange={(evt) => actuallySetTelemetryPrefs({
                         sendTelemetry: evt.target.checked,
                     })} />
-                <InfoBox>{JSON.stringify(telemetryData, null, 2)}</InfoBox>
+                <InfoBox><pre>{JSON.stringify(telemetryData, null, 2)}</pre></InfoBox>
             </PageWithSubMenu >
         </div >
     )
