@@ -33,7 +33,7 @@ var validateCmd = &cobra.Command{
 		}
 
 		domain, _ := cmd.Flags().GetString("domain")
-		e := licensor.NewEvaluator(lic, domain)
+		e := licensor.NewGitpodEvaluator(lic, domain)
 		if msg, valid := e.Validate(); !valid {
 			return xerrors.Errorf(msg)
 		}
