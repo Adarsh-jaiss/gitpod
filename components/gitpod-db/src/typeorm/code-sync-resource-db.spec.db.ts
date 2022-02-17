@@ -85,7 +85,8 @@ export class CodeSyncResourceDBSpec {
         let manifest = await this.db.getManifest(this.userId);
         expect(manifest).to.deep.eq(<IUserDataManifest>{
             session: this.userId,
-            latest: {}
+            latest: {},
+            ref: ''
         });
 
         let machinesRev = await this.db.insert(this.userId, 'machines', async () => { });
@@ -94,7 +95,8 @@ export class CodeSyncResourceDBSpec {
             session: this.userId,
             latest: {
                 machines: machinesRev
-            }
+            },
+            ref: ''
         });
 
         let extensionsRev = await this.db.insert(this.userId, SyncResource.Extensions, async () => { });
@@ -104,7 +106,8 @@ export class CodeSyncResourceDBSpec {
             latest: {
                 machines: machinesRev,
                 extensions: extensionsRev
-            }
+            },
+            ref: ''
         });
 
         machinesRev = await this.db.insert(this.userId, 'machines', async () => { });
@@ -114,7 +117,8 @@ export class CodeSyncResourceDBSpec {
             latest: {
                 machines: machinesRev,
                 extensions: extensionsRev
-            }
+            },
+            ref: ''
         });
     }
 

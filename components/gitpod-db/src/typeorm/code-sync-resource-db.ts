@@ -41,7 +41,7 @@ export class CodeSyncResourceDB {
             .getMany();
 
         const latest: Record<ServerResource, string> = Object.create({});
-        const manifest: IUserDataManifest = { session: userId, latest };
+        const manifest: IUserDataManifest = { session: userId, latest, ref: '' };
         for (const resource of resources) {
             latest[resource.kind] = resource.rev;
         }
