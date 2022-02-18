@@ -1198,7 +1198,8 @@ export class GitpodServerEEImpl extends GitpodServerImpl {
         }
     }
 
-    protected readonly findAssigneeThrottled: ThrottledFunction<any[], FindUserByIdentityStrResult> = pThrottle(async (logCtx: LogContext, identityStr: string): Promise<FindUserByIdentityStrResult> => {
+    protected readonly findAssigneeThrottler = pThrottle({ limit: 1, interval: 1000 });
+    protected readonly findAssigneeThrottled: ThrottledFunction<any[], FindUserByIdentityStrResult> = this.findAssigneeThrottler(async (logCtx: LogContext, identityStr: string): Promise<FindUserByIdentityStrResult> => {
         let assigneeInfo = undefined;
         try {
             assigneeInfo = await this.userService.findUserByIdentityStr(identityStr);
@@ -1209,7 +1210,7 @@ export class GitpodServerEEImpl extends GitpodServerImpl {
             throw new ResponseError(ErrorCodes.TEAM_SUBSCRIPTION_ASSIGNMENT_FAILED, `Gitpod user not found`, { msg: `Gitpod user not found` });
         }
         return assigneeInfo;
-    }, 1, 1000);
+    });
 
     protected async findAssignee(logCtx: LogContext, identityStr: string) {
         return await this.findAssigneeThrottled(logCtx, identityStr);

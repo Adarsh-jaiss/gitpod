@@ -14,6 +14,7 @@ import { UserDB, BUILTIN_WORKSPACE_PROBE_USER_ID, WorkspaceDB, TracedWorkspaceDB
 import { WorkspaceStarter } from "../../../src/workspace/workspace-starter";
 import fetch from "node-fetch";
 import { Config } from "../../../src/config";
+import { timeout } from "../../../src/util/fetch";
 
 export interface ProbeResult {
     workspaceID: string
@@ -122,7 +123,7 @@ export class WorkspaceHealthMonitoring {
 
         let up = false;
         try {
-            const response = await fetch(probeURL.toString(), { timeout: 5000 });
+            const response = await fetch(probeURL.toString(), { signal: timeout(5000).signal });
             span.log({ probeURL, response: await response.text() });
             up = true;
         } catch (err) {

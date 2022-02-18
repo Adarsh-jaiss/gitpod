@@ -16,6 +16,7 @@ import { PluginIndexEntry } from '@gitpod/gitpod-protocol/lib/theia-plugins';
 import { StorageClient } from '../storage/storage-client';
 import {  } from '@gitpod/gitpod-db/lib';
 import fetch from 'node-fetch';
+import { timeout } from '../util/fetch';
 
 const builtinExtensions: PluginIndexEntry[] = require('@gitpod/gitpod-protocol/data/builtin-theia-plugins.json');
 
@@ -241,7 +242,7 @@ export class TheiaPluginService {
             const queryHref = url.format(queryUrl)
             const response = await fetch(queryHref, {
                 method: 'POST',
-                timeout: 5000,
+                signal: timeout(5000).signal,
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
