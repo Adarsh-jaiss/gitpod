@@ -35,9 +35,11 @@ export USER=gitpod
 # Replace OpenVSX URL
 grep -rl open-vsx.org /ide | xargs sed -i "s|https://open-vsx.org|$VSX_REGISTRY_URL|g"
 
+mapfile -t -d " " EXTENSION_FLAGS < <(/ide/extensionhelper)
+
 cd /ide || exit
 if [ "$SUPERVISOR_DEBUG_ENABLE" = "true" ]; then
-    exec /ide/bin/gitpod-code --inspect --log=trace "$@"
+    exec /ide/bin/gitpod-code --inspect --log=trace "${EXTENSION_FLAGS[@]}" "$@"
 else
-    exec /ide/bin/gitpod-code "$@"
+    exec /ide/bin/gitpod-code "${EXTENSION_FLAGS[@]}" "$@"
 fi

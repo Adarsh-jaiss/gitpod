@@ -4,6 +4,8 @@ packages:
     srcs:
       - "startup.sh"
       - "supervisor-ide-config.json"
+    deps:
+      - components/ide/code/extensionhelper:app
     argdeps:
       - imageRepoBase
       - codeCommit
