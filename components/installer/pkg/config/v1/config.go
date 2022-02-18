@@ -231,7 +231,7 @@ type Workspace struct {
 }
 
 type OpenVSX struct {
-	URL string `json:"url"`
+	URL string `json:"url" validate:"url"`
 }
 
 type FSShiftMethod string
