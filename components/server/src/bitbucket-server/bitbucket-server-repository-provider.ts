@@ -100,4 +100,8 @@ export class BitbucketServerRepositoryProvider implements RepositoryProvider {
         //     authorAvatarUrl: commit.author?.user?.links?.avatar?.href,
         // };
     }
+
+    async getCommitHistory(user: User, owner: string, repo: string, ref: string, maxDepth: number): Promise<string[]>  {
+        return [];
+    }
 }
