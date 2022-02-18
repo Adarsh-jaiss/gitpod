@@ -77,7 +77,7 @@ process.on("SIGUSR1", () => {
                 if (!err) {
                     const filename = path.join(os.tmpdir(), Date.now() + '.cpuprofile');
                     console.log('preparing cpuprofile: ' + filename);
-                    fs.promises.writeFile(filename, JSON.stringify(profile));
+                    fs.promises.writeFile(filename, JSON.stringify(profile)).catch(error => console.error('failed to cpuprofile: ', error));
                 } else {
                     console.error('failed to cpuprofile: ', err);
                 }
