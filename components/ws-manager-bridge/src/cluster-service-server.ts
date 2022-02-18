@@ -258,6 +258,8 @@ export class ClusterService implements IClusterServiceServer {
                     response.addStatus(clusterStatus);
                 }
 
+                log.debug("status for clusters.list", response.getStatusList())
+
                 callback(null, response);
             } catch (err) {
                 callback(mapToGRPCError(err), null);
