@@ -153,6 +153,12 @@ export async function deployToPreviewEnvironment(werft: Werft, jobConfig: JobCon
     }
 
     werft.phase(phases.PREDEPLOY, "Checking for existing installations...");
+
+    const maxBranchNameLength = 26;
+    if (deploymentConfig.destname.length > maxBranchNameLength) {
+        werft.fail(phases.PREDEPLOY, `The branch name ${deploymentConfig.destname} is more than ${maxBranchNameLength} character. Please choose a shorter name!`)
+    }
+
     // the context namespace is not set at this point
     const hasGitpodHelmInstall = exec(`helm status ${helmInstallName} -n ${deploymentConfig.namespace}`, { slice: "check for Helm install", dontCheckRc: true }).code === 0;
     const hasGitpodInstallerInstall = exec(`kubectl get configmap gitpod-app -n ${deploymentConfig.namespace}`, { slice: "check for Installer install", dontCheckRc: true }).code === 0;
