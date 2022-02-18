@@ -13,6 +13,7 @@ import { AuthUserSetup } from "../auth/auth-provider";
 import { GenericAuthProvider } from "../auth/generic-auth-provider";
 import { BitbucketServerOAuthScopes } from "./bitbucket-server-oauth-scopes";
 import * as BitbucketServer from "@atlassian/bitbucket-server";
+import { timeout } from "../util/fetch";
 
 @injectable()
 export class BitbucketServerAuthProvider extends GenericAuthProvider {
@@ -56,6 +57,7 @@ export class BitbucketServerAuthProvider extends GenericAuthProvider {
     protected readAuthUserSetup = async (accessToken: string, _tokenResponse: object) => {
         try {
             const fetchResult = await fetch(`https://${this.params.host}/plugins/servlet/applinks/whoami`, {
+                signal: timeout(10000).signal,
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
                 }

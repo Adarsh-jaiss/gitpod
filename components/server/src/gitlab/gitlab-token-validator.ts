@@ -6,6 +6,7 @@
 
 import { injectable } from "inversify";
 import fetch from "node-fetch";
+import { timeout } from "../util/fetch";
 import { CheckWriteAccessResult, IGitTokenValidator, IGitTokenValidatorParams } from "../workspace/git-token-validator";
 
 @injectable()
@@ -22,6 +23,7 @@ export class GitLabTokenValidator implements IGitTokenValidator {
 				query: `query {project(fullPath: "${repoFullName}") { visibility, userPermissions{ pushCode } } } `
 			};
 			const response = await fetch(`https://${host}/api/graphql`, {
+				signal: timeout(20000).signal,
 				method: "POST",
 				body: JSON.stringify(request),
 				headers: {

@@ -20,6 +20,7 @@ import { AuthorizationService } from "../user/authorization-service";
 import { TheiaPluginService } from "../theia-plugin/theia-plugin-service";
 import { TraceContext } from "@gitpod/gitpod-protocol/lib/util/tracing";
 import { Config } from "../config";
+import { timeout } from "../util/fetch";
 
 const POD_PATH_WORKSPACE_BASE = "/workspace";
 
@@ -312,7 +313,10 @@ export class ConfigProvider {
 
         try {
             const url = `https://raw.githubusercontent.com/gitpod-io/definitely-gp/master/${filePath}`;
-            const response = await fetch(url, { method: 'GET' });
+            const response = await fetch(url, {
+                signal: timeout(15000).signal,
+                method: 'GET',
+            });
             let content;
             if (response.ok) {
                 try {

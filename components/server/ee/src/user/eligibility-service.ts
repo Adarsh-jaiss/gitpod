@@ -18,6 +18,7 @@ import { AccountStatementProvider, CachedAccountStatement } from "./account-stat
 import { EMailDomainService } from "../auth/email-domain-service";
 import fetch from "node-fetch";
 import { Config } from "../../../src/config";
+import { timeout } from "../../../src/util/fetch";
 
 export interface MayStartWorkspaceResult {
     hitParallelWorkspaceLimit?: HitParallelWorkspaceLimit;
@@ -96,6 +97,7 @@ export class EligibilityService {
         const logCtx = { userId: user.id };
         try {
             const rawResponse = await fetch("https://education.github.com/api/user", {
+                signal: timeout(5000).signal,
                 headers: {
                     "Authorization": `token ${token}`,
                     "faculty-check-preview": "true"

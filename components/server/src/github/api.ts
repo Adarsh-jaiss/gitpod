@@ -19,6 +19,7 @@ import { GitHubTokenHelper } from './github-token-helper';
 import { Deferred } from '@gitpod/gitpod-protocol/lib/util/deferred';
 
 import { URL } from 'url';
+import { timeout } from '../util/fetch';
 
 export class GitHubApiError extends Error {
     constructor(public readonly response: OctokitResponse<any>) {
@@ -46,6 +47,7 @@ export class GitHubGraphQlEndpoint {
             `https://raw.githubusercontent.com/${org}/${name}/${commitish}/${path}` :
             `https://${host}/${org}/${name}/raw/${commitish}/${path}`;
         const response = await fetch(urlString, {
+            signal: timeout(15000).signal,
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -82,6 +84,7 @@ export class GitHubGraphQlEndpoint {
 
     async runQueryWithToken<T>(token: string, request: object): Promise<QueryResult<T>> {
         const response = await fetch(this.baseURLv4, {
+            signal: timeout(20000).signal,
             method: 'POST',
             body: JSON.stringify(request),
             headers: {

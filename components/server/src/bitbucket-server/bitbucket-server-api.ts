@@ -9,6 +9,7 @@ import { User } from "@gitpod/gitpod-protocol";
 import { inject, injectable } from "inversify";
 import { AuthProviderParams } from "../auth/auth-provider";
 import { BitbucketServerTokenHelper } from './bitbucket-server-token-handler';
+import { timeout } from '../util/fetch';
 
 @injectable()
 export class BitbucketServerApi {
@@ -20,6 +21,7 @@ export class BitbucketServerApi {
         const token = (await this.tokenHelper.getTokenWithScopes(user, [])).value;
         const fullUrl = `${this.baseUrl}${urlPath}`;
         const response = await fetch(fullUrl, {
+            signal: timeout(10000).signal,
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

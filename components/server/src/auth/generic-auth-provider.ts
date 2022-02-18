@@ -27,6 +27,7 @@ import { LoginCompletionHandler } from './login-completion-handler';
 import { TosFlow } from '../terms/tos-flow';
 import { increaseLoginCounter } from '../../src/prometheus-metrics';
 import { OutgoingHttpHeaders } from 'http2';
+import { timeout } from '../util/fetch';
 
 /**
  * This is a generic implementation of OAuth2-based AuthProvider.
@@ -194,6 +195,7 @@ export class GenericAuthProvider implements AuthProvider {
             this.readAuthUserSetup = async (accessToken: string, tokenResponse: object) => {
                 try {
                     const fetchResult = await fetch(configURL, {
+                        signal: timeout(10000).signal,
                         method: "POST",
                         headers: {
                             "Accept": "application/json",

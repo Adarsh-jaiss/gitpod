@@ -22,6 +22,7 @@ import { increaseApiCallUserCounter } from '../prometheus-metrics';
 import { TheiaPluginService } from '../theia-plugin/theia-plugin-service';
 import { Config } from '../config';
 import { CachingBlobServiceClientProvider } from '@gitpod/content-service/lib/sugar';
+import { timeout } from '../util/fetch';
 
 // By default: 5 kind of resources * 20 revs * 1Mb = 100Mb max in the content service for user data.
 const defautltRevLimit = 20;
@@ -191,6 +192,7 @@ export class CodeSyncService {
                     const blobsClient = this.blobsProvider.getDefault();
                     const urlResponse = await util.promisify<DownloadUrlRequest, DownloadUrlResponse>(blobsClient.downloadUrl.bind(blobsClient))(request);
                     const response = await fetch(urlResponse.getUrl(), {
+                        signal: timeout(10000).signal,
                         headers: {
                             'content-type': contentType
                         }
@@ -241,6 +243,7 @@ export class CodeSyncService {
                 const url = urlResponse.getUrl();
                 const content = req.body as string;
                 const response = await fetch(url, {
+                    signal: timeout(10000).signal,
                     method: 'PUT',
                     body: content,
                     headers: {
